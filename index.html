@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flash Games</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f4f4f4;
+        }
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(3, 100px);
+            grid-gap: 10px;
+        }
+        .grid-item {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #4CAF50;
+            color: white;
+            font-size: 16px;
+            height: 100px;
+            cursor: pointer;
+            border-radius: 8px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<div class="grid-container">
+    <div class="grid-item" data-link="https://notmagelock.github.io/flash/bloons.swf" onclick="copyToClipboard(this)">Bloons</div>
+    <!-- Add more squares here -->
+</div>
+
+<script>
+    function copyToClipboard(element) {
+        const link = element.getAttribute('data-link');
+        navigator.clipboard.writeText(link).then(() => {
+            alert(`Copied: ${link}`);
+        }, () => {
+            alert('Failed to copy the link.');
+        });
+    }
+</script>
+
+</body>
+</html>
