@@ -3,9 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <title>SWF Loader with Ruffle</title>
     <link rel="icon" href="/assets/favicon.ico" type="image/x-icon">
     <link href="https://fonts.googleapis.com/css2?family=Londrina+Solid:wght@400&display=swap" rel="stylesheet">
+    <link rel="apple-touch-icon" href="/assets/favicon.ico">
     <style>
         body {
             font-family: 'Londrina Solid', sans-serif;
@@ -140,6 +143,26 @@
                 errorMessage.textContent = ''; // Clear any previous error messages
             }
 
+            // Check for URL parameters
+            const urlParams = new URLSearchParams(window.location.search);
+            const gameParam = urlParams.get('game');
+
+            if (gameParam) {
+                const gameUrlMap = {
+                    'bloons': 'https://notmagelock.github.io/flash/bloons.swf',
+                    'bloons2': 'https://notmagelock.github.io/flash/bloons2.swf',
+                    'bloonstd': 'https://notmagelock.github.io/flash/bloonstd.swf',
+                    'supermonkey': 'https://notmagelock.github.io/flash/bloonssupermonkey.swf',
+                    'hotairbloon': 'https://notmagelock.github.io/flash/HotAirBloon.swf'
+                };
+
+                if (gameUrlMap[gameParam]) {
+                    loadSWF(gameUrlMap[gameParam]);
+                } else {
+                    errorMessage.textContent = 'Error: Invalid game selection.';
+                }
+            }
+
             fileInput.addEventListener('change', function(event) {
                 const file = event.target.files[0];
                 if (file) {
@@ -165,13 +188,22 @@
             });
 
             fullscreenBtn.addEventListener('click', function() {
-                if (!document.fullscreenElement) {
-                    ruffleContainer.requestFullscreen();
-                } else {
-                    document.exitFullscreen();
+                const docEl = ruffleContainer;
+                const requestFullscreen = docEl.requestFullscreen || docEl.mozRequestFullScreen || docEl.webkitRequestFullscreen || docEl.msRequestFullscreen;
+                if (requestFullscreen) {
+                    requestFullscreen.call(docEl);
                 }
             });
         });
+    </script>
+
+    <!-- Register Service Worker -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/service-worker.js')
+            .then(() => console.log('Service Worker registered'))
+            .catch(error => console.error('Service Worker registration failed:', error));
+        }
     </script>
 
 </body>
