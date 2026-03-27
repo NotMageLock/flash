@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Big Chungus Loader</title>
+
+<script src="ruffle.js"></script>
+
+<style>
+    body {
+        background-color: #d9d9d9;
+        font-family: Tahoma, Arial, sans-serif;
+    }
+
+    .window {
+        width: 820px;
+        margin: 50px auto;
+        background: #ececec;
+        border: 2px solid #a0a0a0;
+        box-shadow: inset -2px -2px 0 #ffffff,
+                    inset 2px 2px 0 #808080;
+    }
+
+    .titlebar {
+        background: linear-gradient(#000080, #000060);
+        color: white;
+        padding: 6px 10px;
+        font-weight: bold;
+    }
+
+    .content {
+        padding: 15px;
+        text-align: center;
+    }
+
+    .raised {
+        border: 2px solid;
+        border-color: #ffffff #808080 #808080 #ffffff;
+        background: #d9d9d9;
+        padding: 10px;
+        display: inline-block;
+    }
+
+    #dropzone {
+        width: 640px;
+        height: 100px;
+        line-height: 100px;
+        margin-bottom: 10px;
+        text-align: center;
+        border: 2px dashed #808080;
+        background: #f0f0f0;
+        color: #333;
+    }
+
+    #dropzone.dragover {
+        background: #cce0ff;
+    }
+
+    button {
+        background: #d9d9d9;
+        border: 2px solid;
+        border-color: #ffffff #808080 #808080 #ffffff;
+        padding: 5px 10px;
+        cursor: pointer;
+    }
+
+    button:active {
+        border-color: #808080 #ffffff #ffffff #808080;
+    }
+
+    input[type="file"] {
+        margin-top: 10px;
+    }
+</style>
+</head>
+<body>
+
+<div class="window">
+    <div class="titlebar">Big Chungus Loader</div>
+
+    <div class="content">
+        <div class="raised">
+
+            <div id="dropzone">Drag & Drop SWF Here</div>
+
+            <div id="player" style="width:640px;height:360px;background:black;"></div>
+
+            <input type="file" id="fileInput" accept=".swf">
+
+        </div>
+    </div>
+</div>
+
+<script>
+    const ruffle = window.RufflePlayer.newest();
+
+    function loadSWF(file) {
+        const player = ruffle.createPlayer();
+        const container = document.getElementById("player");
+
+        container.innerHTML = "";
+        container.appendChild(player);
+
+        const url = URL.createObjectURL(file);
+        player.load(url);
+    }
+
+    document.getElementById("fileInput").addEventListener("change", function(e) {
+        const file = e.target.files[0];
+        if (file && file.name.endsWith(".swf")) {
+            loadSWF(file);
+        } else {
+            alert("Please select a valid SWF file.");
+        }
+    });
+
+    const dropzone = document.getElementById("dropzone");
+
+    dropzone.addEventListener("dragover", (e) => {
+        e.preventDefault();
+        dropzone.classList.add("dragover");
+    });
+
+    dropzone.addEventListener("dragleave", () => {
+        dropzone.classList.remove("dragover");
+    });
+
+    dropzone.addEventListener("drop", (e) => {
+        e.preventDefault();
+        dropzone.classList.remove("dragover");
+
+        const file = e.dataTransfer.files[0];
+        if (file && file.name.endsWith(".swf")) {
+            loadSWF(file);
+        } else {
+            alert("Only SWF files are supported.");
+        }
+    });
+</script>
+
+</body>
+</html>
